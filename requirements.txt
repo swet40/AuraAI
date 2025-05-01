@@ -36,7 +36,6 @@ Pillow==10.2.0
 preshed==3.0.9
 proglog==0.1.10
 pydantic==1.10.12
-pydantic_core==2.14.5
 python-dotenv==1.0.1
 requests==2.31.0
 smart-open==6.4.0
