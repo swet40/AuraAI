@@ -1,6 +1,9 @@
-import os
+from io import BytesIO
+from PIL import Image
+import numpy as np
 import requests
 import base64
+import os
 from datetime import datetime
 import time
 
@@ -46,19 +49,22 @@ def generate_images(image_prompts):
         if response.status_code == 200:
             result = response.json()
             image_base64 = result['artifacts'][0]['base64']
-            image_filename = os.path.join(output_dir, f"image_{timestamp}_{idx}.png")
 
-            # Save image to file
-            with open(image_filename, "wb") as img_file:
-                img_file.write(base64.b64decode(image_base64))
+            # Convert base64 to in-memory image
+            image_data = base64.b64decode(image_base64)
+            image = Image.open(BytesIO(image_data))
 
-            images.append(image_filename)
-            print(f"Image saved to {image_filename}")
+            # Convert to numpy array for MoviePy
+            image_np = np.array(image)
+
+            images.append(image_np)
+
+            print(f"Image {idx+1} generated in-memory.")
 
         else:
             print(f"Failed to generate image for prompt '{prompt}': {response.status_code} - {response.text}")
 
-        time.sleep(1)  # Avoid hitting rate limits
+        time.sleep(1)
 
     return images
 

@@ -2,8 +2,10 @@ import moviepy.editor as mpy
 from moviepy.editor import concatenate_videoclips
 import os
 from datetime import datetime
+import numpy as np
+from io import BytesIO
 
-def create_video(images, voiceover_content, story, timestamp):
+def create_video(image_arrays, voiceover_content, story, timestamp):
     # Create an output directory for this run
     output_dir = os.path.join("outputs", timestamp)
     os.makedirs(output_dir, exist_ok=True)
@@ -13,11 +15,8 @@ def create_video(images, voiceover_content, story, timestamp):
     with open(voiceover_filename, "wb") as f:
         f.write(voiceover_content)
 
-    # Generate image file names based on the timestamp and the index
-    image_filenames = [os.path.join(output_dir, f"image_{timestamp}_{idx}.png") for idx, _ in enumerate(images)]
-
-    # Create video clips from images
-    image_clips = [mpy.ImageClip(img).set_duration(5) for img in image_filenames]
+    # Create video clips from image arrays directly
+    image_clips = [mpy.ImageClip(img).set_duration(5) for img in image_arrays]
     video_clip = concatenate_videoclips(image_clips, method="compose")
 
     # Set voiceover as audio

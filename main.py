@@ -10,7 +10,7 @@ import os
 
 def main():
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    output_dir = f"outputs/{timestamp}"
+    output_dir = os.path.join("outputs", timestamp)
     os.makedirs(output_dir, exist_ok=True)
 
     # Get user input
@@ -28,7 +28,8 @@ def main():
     save_story_with_image_prompts(story, final_story_prompt, image_prompts)
 
     # Generate images
-    images = generate_images(image_prompts)
+    images = generate_images(st.session_state.image_prompts, output_dir, timestamp)
+
     print("Images generated successfully.")
     save_images(images)
 
