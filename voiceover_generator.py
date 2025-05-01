@@ -1,5 +1,8 @@
 import requests
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def generate_voiceover(story, save_file=False, output_dir=None):
     headers = {

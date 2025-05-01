@@ -100,6 +100,11 @@ if st.session_state.story:
                 images = generate_images(st.session_state.image_prompts, output_dir, timestamp)
                 save_images(images)
                 voiceover = generate_voiceover(st.session_state.story)
+                if voiceover:
+                    save_voiceover(voiceover, timestamp)
+                else:
+                    st.error("❌ Failed to generate voiceover. Please check your API key or network connection.")
+                    st.stop()
                 save_voiceover(voiceover, timestamp)
                 create_video(images, voiceover, st.session_state.story, timestamp)
 
