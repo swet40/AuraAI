@@ -17,9 +17,17 @@ def create_video(image_arrays, voiceover_content, story, timestamp):
 
     # Create video clips from image arrays directly
     image_clips = [mpy.ImageClip(img).set_duration(5) for img in image_arrays]
+    if not image_clips:
+            raise ValueError("No image clips available to create the video.")
+            
+    if not image_clips:
+        raise ValueError("No image clips available to create the video. Please check your image generation step.")
+
     video_clip = concatenate_videoclips(image_clips, method="compose")
 
-    # Set voiceover as audio
+
+
+            # Set voiceover as audio
     video_clip = video_clip.set_audio(mpy.AudioFileClip(voiceover_filename))
 
     # Save final video

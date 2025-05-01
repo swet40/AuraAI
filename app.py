@@ -97,7 +97,7 @@ if st.session_state.story:
 
                 save_story(st.session_state.story)
                 save_story_with_image_prompts(st.session_state.story, user_prompt, st.session_state.image_prompts)
-                images = generate_images(st.session_state.image_prompts)
+                images = generate_images(st.session_state.image_prompts, output_dir, timestamp)
                 save_images(images)
                 voiceover = generate_voiceover(st.session_state.story)
                 save_voiceover(voiceover, timestamp)
@@ -115,17 +115,44 @@ if st.session_state.story:
 
             st.success("✅ Video ready!")
 
-            video_html = f"""
-                <video width="600" height="340" controls>
-                    <source src="{final_video_path}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            """
-            st.markdown(video_html, unsafe_allow_html=True)
+                # Optional: styled video container
+            st.markdown("""
+                    <style>
+                    .video-container video {
+                        width: 720px;
+                        height: 405px;
+                        border-radius: 10px;
+                        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+                    }
+                    </style>
+                """, unsafe_allow_html=True)
+
+            if os.path.exists(final_video_path):
+                with open(final_video_path, "rb") as video_file:
+                    video_data = video_file.read()
+
+                st.markdown("""
+                    <style>
+                    .custom-video video {
+                        width: 600px;
+                        height: 340px;
+                        border-radius: 12px;
+                        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+                    }
+                    </style>
+                    <div class="custom-video">
+                """, unsafe_allow_html=True)
+
+                st.video(video_data, format="video/mp4")
+
+                st.markdown("</div>", unsafe_allow_html=True)
+            else:
+                st.error("⚠️ Video not found at the expected path.")
+
 
             with open(final_video_path, "rb") as f:
                 st.download_button("📥 Download Video", data=f, file_name=f"AI_video_{timestamp}.mp4", mime="video/mp4")
 
-# Footer credits
+
 st.markdown("---")
 st.markdown("<p style='text-align: center; color: #6c757d;'>Made with 💙 by AuraAI</p>", unsafe_allow_html=True)
