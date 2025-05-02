@@ -8,48 +8,60 @@ from voiceover_generator import generate_voiceover, save_voiceover
 from video_creator import create_video
 from caption_generator import create_caption_images, add_captions_to_video
 
-# Streamlit config
-st.set_page_config(page_title="AuraAI Video Creator 🎥", page_icon="🎨", layout="wide")
+st.set_page_config(page_title="AuraAI Video Creator 🎥", layout="wide")
 
-# Custom CSS for pastel theme
+# Custom CSS
 st.markdown("""
     <style>
     .main { background-color: #f0f8ff; }
     h1, h2, h3 { color: #5a6d8a; }
     .stButton>button {
-        background-color: #8ecae6;
+        background-color: transparent;
         color: white;
         border-radius: 6px;
         height: 3em;
         font-weight: 600;
     }
-    .stButton>button:hover { background-color: #219ebc; }
+    .stButton>button:hover { background-color: #262730; }
     .stTextInput>div>div>input { background-color: #ffffff; color: #333; }
+            .delete-button button {
+        border: none;
+        background: none !important;
+        color: #007BFF;
+        font-size: 28px;
+        cursor: pointer;
+        padding: 0.1em 0.3em;
+        margin-top: 17px;
+    }
+    .delete-button button:hover {
+        color: #0056b3;
+        background: none;
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# App heading
+
 st.markdown("<h1 style='text-align: center;'>🎨 AuraAI Video Creator</h1>", unsafe_allow_html=True)
 st.markdown("Create AI-generated videos from your custom topic with editable script and prompts.")
 
-# Sidebar controls
-st.sidebar.header("📋 Settings")
+
+st.sidebar.header(" Settings")
 user_prompt = st.sidebar.text_input("🎬 Enter your video topic:")
-add_captions = st.sidebar.checkbox("📑 Add captions to video", value=True)
+add_captions = st.sidebar.checkbox(" Add captions to video", value=True)
 words_per_caption = st.sidebar.slider("✏️ Words per caption image:", 3, 10, 5)
 
-# Initialize session state variables
+
 if "story" not in st.session_state:
     st.session_state.story = ""
 if "image_prompts" not in st.session_state:
     st.session_state.image_prompts = []
 
-# Generate story button
+
 if st.sidebar.button("📝 Generate Story & Prompts"):
     if user_prompt.strip() == "":
         st.warning("Please enter a topic prompt.")
     else:
-        with st.spinner("Generating story..."):
+        with st.spinner("Generating script..."):
             story, final_prompt = generate_story(user_prompt)
             image_prompts = extract_image_prompts(story)
 
@@ -58,7 +70,7 @@ if st.sidebar.button("📝 Generate Story & Prompts"):
 
         st.success("Story and prompts generated!")
 
-# Show generated story and prompts
+
 if st.session_state.story:
     st.subheader("📜 Generated Story")
     st.session_state.story = st.text_area("Edit story if you like:", value=st.session_state.story, height=200)
@@ -72,20 +84,18 @@ if st.session_state.story:
         with cols[0]:
             st.session_state.image_prompts[idx] = st.text_input(f"Prompt {idx+1}", value=prompt, key=f"prompt_{idx}")
         with cols[1]:
-            if st.button("🗑️", key=f"delete_prompt_{idx}"):
+            st.markdown('<div class="delete-button">', unsafe_allow_html=True)
+            if st.button("✖️", key=f"delete_prompt_{idx}"):
                 prompts_to_delete.append(idx)
+            st.markdown('</div>', unsafe_allow_html=True)
 
-    # Delete selected prompts
+
     for idx in sorted(prompts_to_delete, reverse=True):
         del st.session_state.image_prompts[idx]
 
-    # Add new prompt option
-    new_prompt = st.text_input("➕ Add a new image prompt:")
-    if st.button("Add Prompt"):
-        if new_prompt.strip():
-            st.session_state.image_prompts.append(new_prompt)
+    if st.button("➕ Add Prompt"):
+        st.session_state.image_prompts.append("") 
 
-    # Proceed to video generation
     proceed = st.radio("Do you want to proceed with these?", ("Yes", "No"), horizontal=True)
 
     if proceed == "Yes":
@@ -120,7 +130,6 @@ if st.session_state.story:
 
             st.success("✅ Video ready!")
 
-                # Optional: styled video container
             st.markdown("""
                     <style>
                     .video-container video {

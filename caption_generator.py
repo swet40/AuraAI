@@ -14,7 +14,7 @@ def create_caption_images(story, words_per_caption=5):
     caption_segments = [' '.join(words[i:i + words_per_caption]) for i in range(0, len(words), words_per_caption)]
 
     caption_images = []
-    font_path = r"C:\Windows\Fonts\arial.ttf"  # Ensure this is valid
+    font_path = r"C:\Windows\Fonts\arial.ttf" 
     font_size = 40
     font = ImageFont.truetype(font_path, font_size)
 
@@ -22,7 +22,6 @@ def create_caption_images(story, words_per_caption=5):
         img = Image.new('RGBA', (1920, 100), (0, 0, 0, 100))
         d = ImageDraw.Draw(img)
 
-        # Use textbbox instead of textsize for newer Pillow versions
         bbox = d.textbbox((0, 0), segment, font=font)
         text_width = bbox[2] - bbox[0]
         text_height = bbox[3] - bbox[1]

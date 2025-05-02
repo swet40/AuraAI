@@ -7,24 +7,22 @@ from datetime import datetime
 import time
 from dotenv import load_dotenv
 
-# Load .env variables
 load_dotenv()
 
-# Create output directory with timestamp
+
 def get_output_dir():
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     output_dir = os.path.join("outputs", timestamp)
     os.makedirs(output_dir, exist_ok=True)
     return output_dir, timestamp
 
-# Load API Key
+
 stability_api_key = os.getenv("STABILITY_API_KEY")
 
 if not stability_api_key:
     raise ValueError("STABILITY_API_KEY environment variable not set.")
 
 
-# Main image generation function
 def generate_images(image_prompts, output_dir, timestamp):
     images = []
 
@@ -56,7 +54,6 @@ def generate_images(image_prompts, output_dir, timestamp):
             image_data = base64.b64decode(image_base64)
             image = Image.open(BytesIO(image_data))
 
-            # Save image to file
             image_path = os.path.join(output_dir, f"image_{timestamp}_{idx}.png")
             image.save(image_path)
             images.append(image_path)
@@ -70,7 +67,7 @@ def generate_images(image_prompts, output_dir, timestamp):
 
     return images
 
-# Story text save
+
 def save_story_text(story_text):
     output_dir, timestamp = get_output_dir()
     story_filename = os.path.join(output_dir, f"story_{timestamp}.txt")
@@ -79,11 +76,11 @@ def save_story_text(story_text):
     print(f"Story text saved to {story_filename}")
     return story_filename
 
-# Image saving log helper (optional)
+
 def save_images(images):
     print(f"Images saved: {images}")
 
-# Direct image download helper
+
 def download_image(url, filename):
     response = requests.get(url)
     with open(filename, "wb") as f:
