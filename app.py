@@ -41,7 +41,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-st.markdown("<h1 style='text-align: center;'>🎨 AuraAI Video Creator</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'> AuraAI 🎬</h1>", unsafe_allow_html=True)
 st.markdown("Create AI-generated videos from your custom topic with editable script and prompts.")
 
 
