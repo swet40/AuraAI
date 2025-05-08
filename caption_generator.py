@@ -9,7 +9,7 @@ def extract_story_from_file(file_path):
         return file.read()
 
 def create_caption_images(story, words_per_caption=5):
-    """Convert the story into caption segments and generate images."""
+    """Convert the script into caption segments and generate images."""
     words = story.split()
     caption_segments = [' '.join(words[i:i + words_per_caption]) for i in range(0, len(words), words_per_caption)]
 
